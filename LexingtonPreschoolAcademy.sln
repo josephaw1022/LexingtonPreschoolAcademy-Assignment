@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexingtonPreschoolAcademy-API", "LexingtonPreschoolAcademy-API\LexingtonPreschoolAcademy-API.csproj", "{D20F4F6B-AE39-436F-A8F8-9C8EA3709716}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexingtonPreschoolAcademy-Core", "LexingtonPreschoolAcademy-Core\LexingtonPreschoolAcademy-Core.csproj", "{005EA0F3-552E-48E9-8ADE-6A390E8FE776}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexingtonPreschoolAcademy-Database", "LexingtonPreschoolAcademy-Database\LexingtonPreschoolAcademy-Database.csproj", "{7A9D6FFF-EAC5-4EA8-83AC-7D27312D3F68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D20F4F6B-AE39-436F-A8F8-9C8EA3709716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20F4F6B-AE39-436F-A8F8-9C8EA3709716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20F4F6B-AE39-436F-A8F8-9C8EA3709716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20F4F6B-AE39-436F-A8F8-9C8EA3709716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005EA0F3-552E-48E9-8ADE-6A390E8FE776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005EA0F3-552E-48E9-8ADE-6A390E8FE776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005EA0F3-552E-48E9-8ADE-6A390E8FE776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005EA0F3-552E-48E9-8ADE-6A390E8FE776}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A9D6FFF-EAC5-4EA8-83AC-7D27312D3F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A9D6FFF-EAC5-4EA8-83AC-7D27312D3F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A9D6FFF-EAC5-4EA8-83AC-7D27312D3F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A9D6FFF-EAC5-4EA8-83AC-7D27312D3F68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
