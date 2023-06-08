@@ -1,3 +1,52 @@
+<script lang="ts" setup>
+import { inject, ref } from 'vue';
+import type { CreateStudent } from '../DTO/CreateStudent';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
+import { HttpService } from '../api';
+import { onMounted } from 'vue';
+
+
+const httpService = inject('httpService', HttpService.getInstance) as HttpService;
+
+
+const studentList = ref<CreateStudent[]>([]);
+const isLoading = ref(true);
+const errorOccurred = ref(false);
+
+
+async function getStudents() {
+    isLoading.value = true;
+    const { data, error, status } = await httpService.get<{
+        dataset: CreateStudent[],
+        count: number
+    }>('/student');
+
+    if (!!error) {
+        errorOccurred.value = true;
+    }
+
+    if(!!data){ 
+        const { dataset, count } = data
+
+        studentList.value = dataset;
+        
+    }
+    
+    // studentList.value = response.data;
+    isLoading.value = false;
+}
+
+
+onMounted(async () => {
+    await getStudents();
+});
+
+
+
+
+</script>
+
+
 <template>
     <main className="h-full w-full flex flex-col">
 
@@ -11,8 +60,15 @@
             </VBtn>
         </VAppBar>
 
+        <VContainer class="h-full w-full grid place-items-center" v-if="isLoading">
+            <LoadingSpinner></LoadingSpinner>
+        </VContainer>
 
-        <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+        <VContainer class="h-full w-full grid place-items-center" v-else-if="errorOccurred">
+            <v-typography class="text-center text-red-400 text-xl">
+                An error occurred while loading the student list.
+            </v-typography>
+        </VContainer>
 
         <v-table class="h-full w-full " v-else>
             <thead>
@@ -44,33 +100,6 @@
 </template>
 
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-import type { CreateStudent } from '../DTO/CreateStudent';
-import LoadingSpinner from '../components/LoadingSpinner.vue';
-
-
-const initialStudents: CreateStudent[] = [
-    {
-        firstName: 'John',
-        lastName: 'Doe',
-        classes: ['Math', 'Science', 'English'],
-    },
-    {
-        firstName: 'Jane',
-        lastName: 'Doe',
-        classes: ['Math', 'Science', 'English'],
-    }
-]
-
-const studentList = ref<CreateStudent[]>(initialStudents);
-
-
-const isLoading = ref(false);
-
-
-
-</script>
 
 
 

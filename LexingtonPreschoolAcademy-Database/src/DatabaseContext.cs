@@ -15,9 +15,14 @@ public class LexingtonPreschoolAcademyDatabaseContext : DbContext
 
     //* Set up the many to many relationships
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    {   
         modelBuilder.Entity<StudentTable>()
         .HasMany(s => s.Classes)
-        .WithMany(c => c.Students);
+        .WithOne(c => c.Student)
+        .HasForeignKey(c => c.StudentId)
+        .IsRequired();
     }
+
+
+
 }

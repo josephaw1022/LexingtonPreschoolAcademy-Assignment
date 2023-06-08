@@ -12,7 +12,14 @@ public class CreateStudentRequestBody
 
     public string LastName { get; set; } = string.Empty;
 
-    public ClassOption[] Classes { get; set; } = Array.Empty<ClassOption>();
+    public List<string> Classes { get; set; } = new List<string>();
+
+    internal void Deconstruct(out string FirstName, out string LastName, out List<string> Classes)
+    {
+        FirstName = this.FirstName;
+        LastName = this.LastName;
+        Classes = this.Classes;
+    }
 }
 
 

@@ -2,8 +2,11 @@ using LexingtonPreschoolAcademy_Core;
 
 namespace LexingtonPreschoolAcademy_Database;
 
-public class ClassTable : BaseTable, IClass
+public class ClassTable : BaseTable 
 {
     public required ClassOption Class { get; set; }
-    public List<StudentTable> Students { get; } = new();
+
+    public required int StudentId { get; set; } 
+
+    public StudentTable Student { get; } = null!;
 }

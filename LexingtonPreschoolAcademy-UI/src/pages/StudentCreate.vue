@@ -2,14 +2,20 @@
 import { inject } from 'vue';
 import { ref } from 'vue';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
+import { HttpService } from '../api';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const allClasses = inject('allClasses');
-const httpService = inject('httpService');
+const httpService = inject('httpService', HttpService.getInstance) as HttpService;
 
 const isLoading = ref(false);
 const firstName = ref("");
 const lastName = ref("");
 const classSelections = ref([]);
+
+
 
 const createStudent = async () => {
 
@@ -21,11 +27,19 @@ const createStudent = async () => {
     classSelections: classSelections.value,
   };
 
+
+  const { data, error, status } = await httpService.post('/student', student);
+
+
+  if (!!error) {
+    console.log(error);
+  }
+
+
+  if (!!data) {
+    router.push('/');
+  }
 }
-
-
-
-
 
 </script>
 

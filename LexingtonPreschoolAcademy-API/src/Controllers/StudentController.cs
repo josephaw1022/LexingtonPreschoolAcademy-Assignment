@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using LexingtonPreschoolAcademy_Core;
+using LexingtonPreschoolAcademy_API.DTO;
 using LexingtonPreschoolAcademy_API.DTO.Student;
 using LexingtonPreschoolAcademy_Database;
-
+using LexingtonPreschoolAcademy_Core;
+using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace LexingtonPreschoolAcademy_API.Controllers;
 
-
+//! The business logic shouldnt be in the controller, but its fine for now
 [ApiController]
 [Route("student")]
 public class StudentController : ControllerBase
@@ -35,11 +37,25 @@ public class StudentController : ControllerBase
     /// The list of students
     /// </returns>
     [HttpGet]
-    public IActionResult GetMany()
+    public async Task<IActionResult> GetMany()
     {
-        var listOfStudents = _dbContext.Students.ToList().ToArray();
+        var listOfStudents = await _dbContext.Students.Select(s => new StudentTable
+        {
+            Id = s.Id,
+            FirstName = s.FirstName,
+            LastName = s.LastName,
+            Classes = s.Classes,
+        }).ToArrayAsync();
 
-        return Ok(listOfStudents);
+
+        var response = new ListResponse<StudentTable>
+        {
+            Dataset = listOfStudents,
+            Total = listOfStudents.Length,
+        };
+
+
+        return Ok(response);
     }
 
 
@@ -53,13 +69,86 @@ public class StudentController : ControllerBase
     /// The created student
     /// </returns>
     [HttpPost]
-    public IActionResult Create(
+    public async Task<IActionResult> CreateStudent(
         [FromBody] CreateStudentRequestBody requestBody
     )
     {
 
-        return Ok();
+        var (FirstName, LastName, Classes) = requestBody;
+
+        var student = new StudentTable
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+        };
+
+        _logger.LogDebug("Creating student {@student}", student);
+
+
+        var addStudentResponse = await _dbContext.Students.AddAsync(student);
+
+
+        List<ClassTable> classTables = new();
+
+        foreach (var studentClass in Classes)
+        {
+
+            var temporaryTable = new ClassTable() { Class = ClassOption.Math, StudentId = addStudentResponse.Entity.Id };
+            var validClass = false;
+
+            switch (studentClass)
+            {
+                case "Math":
+                    temporaryTable = new ClassTable { Class = ClassOption.Math, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                case "Science":
+                    temporaryTable = new ClassTable { Class = ClassOption.Science, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                case "History":
+                    temporaryTable = new ClassTable { Class = ClassOption.History, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                case "Spanish":
+                    temporaryTable = new ClassTable { Class = ClassOption.Spanish, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                case "P.E.":
+                    temporaryTable = new ClassTable { Class = ClassOption.P_E, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                case "Art":
+                    temporaryTable = new ClassTable { Class = ClassOption.Art, StudentId = addStudentResponse.Entity.Id };
+                    validClass = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (validClass)
+            {
+                _logger.LogDebug("Creating class {@class}", temporaryTable);
+                await _dbContext.Classes.AddAsync(temporaryTable);
+            }
+        }
+
+
+
+        addStudentResponse.Entity.Classes = classTables;
+
+
+        await _dbContext.SaveChangesAsync();
+
+
+        return CreatedAtAction(
+            nameof(CreateStudent),
+            new { id = addStudentResponse.Entity.Id },
+           addStudentResponse.Entity
+        );
     }
+
+
 }
 
 

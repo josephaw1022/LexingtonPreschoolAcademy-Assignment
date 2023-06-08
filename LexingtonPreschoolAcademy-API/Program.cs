@@ -11,10 +11,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Logging for debugging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 
-builder.Services.AddDbContext<LexingtonPreschoolAcademyDatabaseContext>(opt =>
-    opt.UseInMemoryDatabase("LexingtonPreschoolAcademy"));
+var policyName = "AllowAll";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: policyName,
+            builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .WithMethods("GET", "POST", "PUT", "DELETE")
+                .AllowAnyHeader();
+            });
+});
+
+
+
+
+builder.Services.AddDbContext<LexingtonPreschoolAcademyDatabaseContext>(options =>
+    options.UseSqlServer(
+        @"Server=localhost;Database=LexingtonPreschoolAcademy;User=sa;Password=Scouter11#;encrypt=false;trustservercertificate=true;", 
+        b => b.MigrationsAssembly("LexingtonPreschoolAcademy-API")
+    )
+);
+
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 var app = builder.Build();
 
@@ -25,6 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseCors(policyName);
 
 app.UseAuthorization();
 

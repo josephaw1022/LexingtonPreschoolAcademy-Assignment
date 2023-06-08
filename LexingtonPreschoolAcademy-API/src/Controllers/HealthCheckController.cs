@@ -26,7 +26,7 @@ public class HealthCheck : ControllerBase
         return Ok(new
         {
             Status = "Healthy",
-            Version = _configuration["LexingtonPreschoolAcademyDatabaseContext"] ?? "Not found"
+            Version = _configuration.GetConnectionString("Default"),
         });
     }
 

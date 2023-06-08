@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import type { AxiosInstance } from "axios";
 
 export class HttpService {
@@ -9,31 +9,29 @@ export class HttpService {
   }
 
   private constructor() {
-
     if (!HttpService.client) {
       HttpService.client = axios.create({
         baseURL: process.env?.BASE_WEB_API_URL || "http://localhost:5263",
         headers: {
           "Content-Type": "application/json",
+          'Access-Control-Allow-Origin': '*',
         },
       });
     }
   }
 
-  public async get<T>(url: string) {
+  public async get<T = any>(url: string) {
+    if (!HttpService.client) {
+      throw new Error("HttpService.client is null");
+    }
 
-    if(!HttpService.client){ 
-      throw new Error("HttpService.client is null")
-    } 
-
-    
     let data: T | null = null;
     let status: number | null = null;
     let error: any = null;
 
     await HttpService.client
       .get<T>(url)
-      .then((res) => {
+      .then((res: AxiosResponse<T>) => {
         data = res.data;
         status = res.status;
       })
@@ -49,9 +47,8 @@ export class HttpService {
   }
 
   public async post<T>(url: string, body: any, ...args: any[]) {
-
-    if(!HttpService.client){
-      throw new Error("HttpService.client is null")
+    if (!HttpService.client) {
+      throw new Error("HttpService.client is null");
     }
 
     let data: T | null = null;
@@ -75,4 +72,3 @@ export class HttpService {
     };
   }
 }
-
