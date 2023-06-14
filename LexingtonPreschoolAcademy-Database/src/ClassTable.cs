@@ -6,7 +6,7 @@ public class ClassTable : BaseTable
 {
     public required ClassOption Class { get; set; }
 
-    public required int StudentId { get; set; } 
+    public int StudentId { get; set; }  
 
-    public StudentTable Student { get; } = null!;
+    public StudentTable Student { get; set;  } = null!;
 }

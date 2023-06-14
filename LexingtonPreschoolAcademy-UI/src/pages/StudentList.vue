@@ -25,13 +25,51 @@ async function getStudents() {
         errorOccurred.value = true;
     }
 
-    if(!!data){ 
+    if (!!data) {
         const { dataset, count } = data
 
-        studentList.value = dataset;
-        
+        studentList.value = dataset.map((item: any) => {
+            const tempItem = item;
+            let tempItemClasses = [];
+
+            tempItemClasses = tempItem.classes?.map((classObject: { [x: string]: any; }) => {
+                const tempClasses = [];
+
+                console.log(classObject);
+
+                const classNumber = classObject['class']
+                switch (classNumber) {
+                    case 0:
+                        tempClasses.push('Math');
+                        break;
+                    case 1:
+                        tempClasses.push('Art');
+                        break;
+                    case 2:
+                        tempClasses.push('Science');
+                        break;
+                    case 3:
+                        tempClasses.push('History');
+                        break;
+                    case 4:
+                        tempClasses.push('Spanish');
+                        break;
+                    case 5:
+                        tempClasses.push('PE');
+                        break;
+                }
+
+                return tempClasses;
+            })
+
+            tempItem.classes = tempItemClasses;
+
+            return tempItem;
+        })
+
+
     }
-    
+
     // studentList.value = response.data;
     isLoading.value = false;
 }
@@ -50,7 +88,7 @@ onMounted(async () => {
 <template>
     <main className="h-full w-full flex flex-col">
 
-        <VAppBar scrollBehavior="hide" class="static border-b-2 s" elevation="0">
+        <VAppBar scrollBehavior="hide" class="sticky border-b-2 " elevation="0">
             <VAppBarTitle>
                 Student List
             </VAppBarTitle>
@@ -60,7 +98,7 @@ onMounted(async () => {
             </VBtn>
         </VAppBar>
 
-        <VContainer class="h-full w-full grid place-items-center" v-if="isLoading">
+        <VContainer class="h-full w-full grid place-items-center overflow-y-scroll " v-if="isLoading">
             <LoadingSpinner></LoadingSpinner>
         </VContainer>
 
@@ -90,7 +128,7 @@ onMounted(async () => {
                     <td>{{ item.lastName }}</td>
                     <td>
                         <span v-for="(studentClass, index2) in item.classes" v-if="!!item.classes.length" :key="index2">
-                            {{ studentClass }}
+                            {{ String(studentClass) }}
                             {{ index2 < item.classes.length - 1 ? ', ' : '' }} </span>
                     </td>
                 </tr>

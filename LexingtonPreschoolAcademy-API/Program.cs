@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using LexingtonPreschoolAcademy_Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,7 +38,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<LexingtonPreschoolAcademyDatabaseContext>(options =>
     options.UseSqlServer(
-        @"Server=localhost;Database=LexingtonPreschoolAcademy;User=sa;Password=Scouter11#;encrypt=false;trustservercertificate=true;", 
+        @"Server=localhost;Database=LexingtonPreschoolAcademy;User=sa;Password=Scouter11#;encrypt=false;trustservercertificate=true;",
         b => b.MigrationsAssembly("LexingtonPreschoolAcademy-API")
     )
 );

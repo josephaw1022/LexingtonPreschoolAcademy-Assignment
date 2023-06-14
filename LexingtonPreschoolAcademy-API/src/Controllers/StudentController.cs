@@ -39,13 +39,9 @@ public class StudentController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetMany()
     {
-        var listOfStudents = await _dbContext.Students.Select(s => new StudentTable
-        {
-            Id = s.Id,
-            FirstName = s.FirstName,
-            LastName = s.LastName,
-            Classes = s.Classes,
-        }).ToArrayAsync();
+        var listOfStudents = await _dbContext.Students
+            .Include(s => s.Classes)
+            .ToArrayAsync();
 
 
         var response = new ListResponse<StudentTable>
@@ -93,33 +89,33 @@ public class StudentController : ControllerBase
         foreach (var studentClass in Classes)
         {
 
-            var temporaryTable = new ClassTable() { Class = ClassOption.Math, StudentId = addStudentResponse.Entity.Id };
+            var temporaryTable = new ClassTable() { Class = ClassOption.Math };
             var validClass = false;
 
             switch (studentClass)
             {
                 case "Math":
-                    temporaryTable = new ClassTable { Class = ClassOption.Math, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.Math, Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 case "Science":
-                    temporaryTable = new ClassTable { Class = ClassOption.Science, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.Science,Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 case "History":
-                    temporaryTable = new ClassTable { Class = ClassOption.History, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.History,Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 case "Spanish":
-                    temporaryTable = new ClassTable { Class = ClassOption.Spanish, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.Spanish,Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 case "P.E.":
-                    temporaryTable = new ClassTable { Class = ClassOption.P_E, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.P_E,Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 case "Art":
-                    temporaryTable = new ClassTable { Class = ClassOption.Art, StudentId = addStudentResponse.Entity.Id };
+                    temporaryTable = new ClassTable { Class = ClassOption.Art,Student = addStudentResponse.Entity, StudentId = addStudentResponse.Entity.Id };
                     validClass = true;
                     break;
                 default:
@@ -130,15 +126,10 @@ public class StudentController : ControllerBase
             {
                 _logger.LogDebug("Creating class {@class}", temporaryTable);
                 await _dbContext.Classes.AddAsync(temporaryTable);
+                await _dbContext.SaveChangesAsync();
             }
         }
 
-
-
-        addStudentResponse.Entity.Classes = classTables;
-
-
-        await _dbContext.SaveChangesAsync();
 
 
         return CreatedAtAction(

@@ -9,5 +9,5 @@ public class StudentTable : BaseTable
 
     public required string LastName { get; set; } = null!;
 
-    public List<ClassTable> Classes { get; set; } = new();
+    public ICollection<ClassTable> Classes { get;  } = new List<ClassTable>();
 }

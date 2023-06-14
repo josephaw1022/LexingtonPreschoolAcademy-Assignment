@@ -24,7 +24,7 @@ const createStudent = async () => {
   const student = {
     firstName: firstName.value,
     lastName: lastName.value,
-    classSelections: classSelections.value,
+    classes: classSelections.value,
   };
 
 
@@ -56,7 +56,8 @@ const createStudent = async () => {
     </VToolbarTitle>
 
     <VSpacer></VSpacer>
-    <VBtn @click="createStudent" :disabled="isLoading" variant="tonal">Create</VBtn>
+    <VBtn @click="createStudent" :disabled="isLoading" variant="tonal" color="info" class="text-center" size="large">
+      Create</VBtn>
   </VAppBar>
   <VContainer class="h-full w-full mt-10" v-if="!isLoading">
 

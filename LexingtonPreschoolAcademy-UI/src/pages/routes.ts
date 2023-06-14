@@ -7,11 +7,17 @@ export const routes: RouteRecordRaw[] = [
     path: "/",
     name: "Home",
     component: StudentList,
+    meta: {
+      title: "Lexington Preschool Academy - Home",
+    },
   },
   {
     path: "/create-student",
     name: "CreateStudent",
     component: StudentCreate,
+    meta: {
+      title: "Lexington Preschool Academy - Create Student",
+    },
   },
 ];
 
